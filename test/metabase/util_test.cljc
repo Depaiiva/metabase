@@ -721,3 +721,42 @@
       nil    []
       \c     "abc"
       [:b 2] {:a 1 :b 2})))
+
+(ns metabase.util-test
+  (:require [clojure.test :refer :all]
+            [metabase.util :refer [the-id]]))
+
+;; ----------------------------------------------------------
+;; CT1 - Inteiro válido
+(deftest ct1-the-id-integer-valid
+  (is (= 10 (the-id 10))))
+
+;; ----------------------------------------------------------
+;; CT2 - Mapa com ID válido
+(deftest ct2-the-id-map-valid
+  (is (= 10 (the-id {:id 10}))))
+
+;; ----------------------------------------------------------
+;; CT3 - Mapa com ID inválido
+(deftest ct3-the-id-map-invalid
+  (is (thrown-with-msg?
+        Exception
+        #"Not something with an ID"
+        (the-id {:id "abc"}))))
+
+;; ----------------------------------------------------------
+;; CT4 - Valor não numérico
+(deftest ct4-the-id-string-invalid
+  (is (thrown-with-msg?
+        Exception
+        #"Not something with an ID"
+        (the-id "abc"))))
+
+;; ----------------------------------------------------------
+;; CT5 - Valor nulo
+(deftest ct5-the-id-nil
+  (is (thrown-with-msg?
+        Exception
+        #"Not something with an ID"
+        (the-id nil))))
+
